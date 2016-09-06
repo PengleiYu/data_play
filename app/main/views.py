@@ -12,8 +12,7 @@ def index():
     #     l = [i + "=" + d[i] for i in d]
     #     print(l)
     json = request.json
-    print(json)
-    print(json.get('name'))
+    if not json:
+        print(json)
+        print(json.get('name'))
     return '<h1>Hello world!</h1>\n'
-
-
