@@ -10,7 +10,8 @@ from .errors import return_success
 def add_device():
     device = Device.from_json(request.json)
     db.session.add(device)
-    return return_success()
+    db.session.commit()
+    return device.to_json()
 
     # return 200
 
@@ -23,7 +24,8 @@ def add_sensor(device_id):
     sensor = Sensor.from_json(request.json)
     sensor.device = device
     db.session.add(sensor)
-    return return_success()
+    db.session.commit()
+    return sensor.to_json()
 
 
 @api.route('/device/<device_id>/sensor/<sensor_id>', methods=['post'])
@@ -34,4 +36,5 @@ def add_data(device_id, sensor_id):
     number = Number.from_json(request.json)
     number.sensor = sensor
     db.session.add(number)
-    return return_success()
+    db.session.commit()
+    return number.to_json()
