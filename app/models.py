@@ -12,15 +12,20 @@ class Device(db.Model):
     sensors = db.relationship('Sensor', backref='device', lazy='dynamic')
 
     def to_json(self):
-        return jsonify({
+        return jsonify(self.to_dict())
+
+    def to_dict(self):
+        return {
             'id': self.id,
             'name': self.name,
             'about': self.about,
             'sensor_num': self.sensors.count()
-        })
+        }
 
     @staticmethod
     def from_json(json_device):
+        if not json_device:
+            return
         name = json_device.get('name')
         about = json_device.get('about')
         return Device(name=name, about=about)
@@ -39,16 +44,21 @@ class Sensor(db.Model):
     numbers = db.relationship('Number', backref='sensor', lazy='dynamic')
 
     def to_json(self):
-        return jsonify({
+        return jsonify(self.to_dict())
+
+    def to_dict(self):
+        return {
             'id': self.id,
             'name': self.name,
             'about': self.about,
             'device_id': self.device_id,
             'data_num': self.numbers.count()
-        })
+        }
 
     @staticmethod
     def from_json(json_sensor):
+        if not json_sensor:
+            return
         name = json_sensor.get('name')
         about = json_sensor.get('about')
         return Sensor(name=name, about=about)
@@ -66,15 +76,20 @@ class Number(db.Model):
     sensor_id = db.Column(db.Integer, db.ForeignKey('sensors.id'))
 
     def to_json(self):
-        return jsonify({
+        return jsonify(self.to_dict())
+
+    def to_dict(self):
+        return {
             'id': self.id,
             'timestamp': self.timestamp,
             'value': self.value,
             'sensor_id': self.sensor_id
-        })
+        }
 
     @staticmethod
     def from_json(json_data):
+        if not json_data:
+            return
         value = json_data.get('value')
         timestamp = json_data.get('timestamp')
         return Number(value=value, timestamp=timestamp)
