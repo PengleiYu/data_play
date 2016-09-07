@@ -8,11 +8,7 @@ from .errors import return_success
 
 @api.route('/devices', methods=['post'])
 def add_device():
-    name = request.form.get('name')
-    about = request.form.get('about')
-    if not name or not about:
-        abort(404)
-    device = Device(name=name, about=about)
+    device = Device.from_json(request.json)
     db.session.add(device)
     return return_success()
 
@@ -23,7 +19,7 @@ def add_device():
 def add_sensor(device_id):
     device = Device.query.filter_by(id=int(device_id)).first()
     if not device:
-        abort(404)
+        raise ValidationError('no such device')
     sensor = Sensor.from_json(request.json)
     sensor.device = device
     db.session.add(sensor)
@@ -34,11 +30,8 @@ def add_sensor(device_id):
 def add_data(device_id, sensor_id):
     sensor = Device.query.filter_by(id=int(device_id)).first().sensors.filter_by(id=int(sensor_id)).first()
     if not sensor:
-        abort(404)
-    json = request.json
-    if not json:
-        raise ValidationError('json is None')
-    number = Number.from_json(json)
+        raise ValidationError('no such sensor')
+    number = Number.from_json(request.json)
     number.sensor = sensor
     db.session.add(number)
     return return_success()

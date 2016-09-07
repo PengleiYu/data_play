@@ -13,9 +13,10 @@ class Device(db.Model):
 
     def to_json(self):
         return jsonify({
+            'id': self.id,
             'name': self.name,
             'about': self.about,
-            'sensor_num': self.sensors.query.count()
+            'sensor_num': self.sensors.count()
         })
 
     @staticmethod
@@ -39,10 +40,11 @@ class Sensor(db.Model):
 
     def to_json(self):
         return jsonify({
+            'id': self.id,
             'name': self.name,
             'about': self.about,
             'device_id': self.device_id,
-            'data_num': self.numbers.query.count()
+            'data_num': self.numbers.count()
         })
 
     @staticmethod
@@ -65,6 +67,7 @@ class Number(db.Model):
 
     def to_json(self):
         return jsonify({
+            'id': self.id,
             'timestamp': self.timestamp,
             'value': self.value,
             'sensor_id': self.sensor_id
